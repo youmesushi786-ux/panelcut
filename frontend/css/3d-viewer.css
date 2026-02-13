@@ -1,0 +1,452 @@
+/* ==================== 3D Viewer Container ==================== */
+
+.viewer-section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.viewer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.viewer-header h3 {
+    font-family: var(--font-primary);
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.viewer-header h3 i {
+    color: var(--primary);
+}
+
+.viewer-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.viewer-btn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border-color);
+    background: var(--glass-bg);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.viewer-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: rgba(0, 212, 255, 0.1);
+}
+
+.viewer-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.viewer-separator {
+    width: 1px;
+    height: 24px;
+    background: var(--border-color);
+    margin: 0 var(--spacing-sm);
+}
+
+.board-indicator {
+    font-family: var(--font-primary);
+    font-size: 14px;
+    color: var(--text-secondary);
+    min-width: 120px;
+    text-align: center;
+}
+
+.board-indicator span {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* ==================== 3D Canvas Container ==================== */
+
+.viewer-container {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.viewer-container.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    border-radius: 0;
+}
+
+#three-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* ==================== Viewer Legend ==================== */
+
+.viewer-legend {
+    position: absolute;
+    bottom: var(--spacing-md);
+    left: var(--spacing-md);
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-md);
+    max-width: 250px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.legend-title {
+    font-family: var(--font-primary);
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs) 0;
+    font-size: 12px;
+}
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.legend-label {
+    color: var(--text-primary);
+    flex: 1;
+}
+
+.legend-size {
+    color: var(--text-muted);
+    font-size: 10px;
+}
+
+/* ==================== Viewer Overlay Info ==================== */
+
+.viewer-info-overlay {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.info-badge {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.info-badge i {
+    color: var(--primary);
+}
+
+.info-badge .value {
+    font-family: var(--font-display);
+    font-weight: 600;
+}
+
+/* ==================== 3D Loading State ==================== */
+
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    gap: var(--spacing-xl);
+}
+
+.loading-state p {
+    font-family: var(--font-primary);
+    color: var(--text-secondary);
+    font-size: 16px;
+}
+
+/* 3D Cube Loader */
+.loader-3d {
+    width: 80px;
+    height: 80px;
+    perspective: 200px;
+}
+
+.cube {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: rotateCube 3s infinite linear;
+}
+
+@keyframes rotateCube {
+    0% {
+        transform: rotateX(0deg) rotateY(0deg);
+    }
+    100% {
+        transform: rotateX(360deg) rotateY(360deg);
+    }
+}
+
+.cube .face {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border: 2px solid var(--primary);
+    background: rgba(0, 212, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.cube .front  { transform: rotateY(0deg) translateZ(40px); }
+.cube .back   { transform: rotateY(180deg) translateZ(40px); }
+.cube .right  { transform: rotateY(90deg) translateZ(40px); }
+.cube .left   { transform: rotateY(-90deg) translateZ(40px); }
+.cube .top    { transform: rotateX(90deg) translateZ(40px); }
+.cube .bottom { transform: rotateX(-90deg) translateZ(40px); }
+
+/* ==================== 2D Fallback View ==================== */
+
+.layout-2d-view {
+    width: 100%;
+    height: 100%;
+    padding: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.board-2d {
+    background: #fff8e1;
+    border: 3px solid #333;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.panel-2d {
+    position: absolute;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+    color: #000;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.panel-2d:hover {
+    z-index: 10;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    transform: scale(1.02);
+}
+
+.panel-2d .panel-label {
+    text-align: center;
+    padding: 4px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+}
+
+/* Panel Edge Indicators in 2D */
+.panel-2d .edge-indicator {
+    position: absolute;
+    background: #ffeb3b;
+}
+
+.panel-2d .edge-indicator.top {
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 4px;
+}
+
+.panel-2d .edge-indicator.bottom {
+    bottom: 0;
+    left: 10%;
+    right: 10%;
+    height: 4px;
+}
+
+.panel-2d .edge-indicator.left {
+    left: 0;
+    top: 10%;
+    bottom: 10%;
+    width: 4px;
+}
+
+.panel-2d .edge-indicator.right {
+    right: 0;
+    top: 10%;
+    bottom: 10%;
+    width: 4px;
+}
+
+/* ==================== Layouts Grid ==================== */
+
+.layouts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.layout-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: all var(--transition-normal);
+}
+
+.layout-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+}
+
+.layout-card-header {
+    padding: var(--spacing-md);
+    background: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.layout-card-header h4 {
+    font-family: var(--font-primary);
+    font-size: 16px;
+}
+
+.layout-card-header .efficiency {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.layout-card-header .efficiency.good {
+    color: var(--success);
+}
+
+.layout-card-header .efficiency.medium {
+    color: var(--warning);
+}
+
+.layout-card-header .efficiency.poor {
+    color: var(--error);
+}
+
+.layout-card-preview {
+    padding: var(--spacing-md);
+    display: flex;
+    justify-content: center;
+}
+
+.layout-card-preview svg {
+    max-width: 100%;
+    height: auto;
+}
+
+.layout-card-footer {
+    padding: var(--spacing-md);
+    background: var(--bg-tertiary);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* ==================== Viewer Controls Tooltip ==================== */
+
+.viewer-btn[title] {
+    position: relative;
+}
+
+.viewer-btn[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    margin-bottom: 5px;
+    z-index: 100;
+}
+
+/* ==================== Responsive 3D Viewer ==================== */
+
+@media (max-width: 768px) {
+    .viewer-container {
+        height: 350px;
+    }
+    
+    .viewer-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .viewer-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .viewer-legend {
+        bottom: auto;
+        top: var(--spacing-md);
+        left: var(--spacing-md);
+        right: var(--spacing-md);
+        max-width: none;
+    }
+    
+    .layouts-grid {
+        grid-template-columns: 1fr;
+    }
+}

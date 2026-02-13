@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Pro - Cutting Optimizer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="app">
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <div class="logo-mark">
+                <i class="fas fa-ruler-combined"></i>
+            </div>
+            <div class="logo-text">
+                <span class="logo-title">Panel Pro</span>
+                <span class="logo-subtitle">Interior cutting & costing</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <span class="api-status" id="api-status">Connecting API...</span>
+        </div>
+    </header>
+
+    <!-- Steps -->
+    <div class="steps">
+        <div class="progress">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="steps-row">
+            <button class="step active" data-step="1">
+                <span class="step-number">1</span>
+                <span class="step-label">Input & Details</span>
+            </button>
+            <button class="step" data-step="2">
+                <span class="step-number">2</span>
+                <span class="step-label">Results & Payment</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <main class="main">
+
+        <!-- STEP 1: INPUTS -->
+        <section class="step-section active" id="step-1">
+            <div class="section-header">
+                <h2>Project inputs</h2>
+                <p>Enter board details, all panels, stock sheets, options and customer info in one place.</p>
+            </div>
+
+            <!-- Board configuration -->
+            <section class="card">
+                <div class="card-header">
+                    <i class="fas fa-border-all"></i>
+                    <span>Board configuration</span>
+                </div>
+                <div class="card-body">
+                    <div class="board-flow">
+                        <div>
+                            <div class="field-label">1. Board core</div>
+                            <div id="board-type-options" class="chip-row"></div>
+                        </div>
+                        <div>
+                            <div class="field-label">2. Thickness</div>
+                            <div id="board-thickness-options" class="chip-row"></div>
+                        </div>
+                        <div>
+                            <div class="field-label">3. Company</div>
+                            <div id="board-company-options" class="chip-row"></div>
+                        </div>
+                        <div>
+                            <div class="field-label">4. Colour / finish</div>
+                            <div id="board-color-options" class="color-row"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Panels table + edge preview -->
+            <section class="card">
+                <div class="card-header">
+                    <i class="fas fa-table"></i>
+                    <span>Panels</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-intro">
+                        Fill each panel on its row. Width and length are in millimetres.
+                    </p>
+
+                    <div class="table-wrapper">
+                        <table class="stock-table">
+                            <thead>
+                            <tr>
+                                <th>Label / Description</th>
+                                <th>Width (mm)</th>
+                                <th>Length (mm)</th>
+                                <th>Qty</th>
+                                <th>Alignment</th>
+                                <!-- no edging column in table -->
+                                <th>Notes</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody id="panels-body"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="card-actions">
+                        <button id="add-panel-row" class="btn-secondary btn-small" type="button">
+                            <i class="fas fa-plus"></i>
+                            <span>Add panel row</span>
+                        </button>
+                        <button id="reset-panel-rows" class="btn-secondary btn-small" type="button">
+                            Reset panels
+                        </button>
+                    </div>
+
+                    <!-- Edge preview -->
+                    <div class="edge-preview-area">
+                        <div class="edge-preview-box">
+                            <div class="edge-rect">
+                                <div id="edge-top-box" class="edge-side top"></div>
+                                <div id="edge-right-box" class="edge-side right"></div>
+                                <div id="edge-bottom-box" class="edge-side bottom"></div>
+                                <div id="edge-left-box" class="edge-side left"></div>
+                                <div class="edge-center">
+                                    <span id="edge-dims">0 × 0 mm</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="edge-preview-controls">
+                            <div class="edge-preview-title">Selected panel edges</div>
+                            <div class="edge-preview-subtitle">
+                                Click a panel row above, then choose which sides get edge banding.
+                            </div>
+                            <div class="edge-toggle-row">
+                                <label class="edge-toggle" id="edge-toggle-top">
+                                    <input type="checkbox">
+                                    <span>Top</span>
+                                </label>
+                                <label class="edge-toggle" id="edge-toggle-right">
+                                    <input type="checkbox">
+                                    <span>Right</span>
+                                </label>
+                                <label class="edge-toggle" id="edge-toggle-bottom">
+                                    <input type="checkbox">
+                                    <span>Bottom</span>
+                                </label>
+                                <label class="edge-toggle" id="edge-toggle-left">
+                                    <input type="checkbox">
+                                    <span>Left</span>
+                                </label>
+                            </div>
+                            <button class="btn-secondary btn-small" type="button" id="edge-select-all">
+                                <i class="fas fa-border-all"></i>
+                                <span>All edges</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stock + options -->
+            <div class="two-cols">
+                <!-- Stock sheets -->
+                <section class="card">
+                    <div class="card-header">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Stock sheets</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-intro">
+                            Enter all sheet sizes you have in stock.
+                        </p>
+                        <div class="table-wrapper">
+                            <table class="stock-table">
+                                <thead>
+                                <tr>
+                                    <th>Length (mm)</th>
+                                    <th>Width (mm)</th>
+                                    <th>Qty</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody id="stock-sheets-body"></tbody>
+                            </table>
+                        </div>
+                        <div class="card-actions">
+                            <button id="add-stock-row" class="btn-secondary btn-small" type="button">
+                                <i class="fas fa-plus"></i>
+                                <span>Add sheet</span>
+                            </button>
+                            <button id="reset-stock-rows" class="btn-secondary btn-small" type="button">
+                                Reset sheets
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Options -->
+                <section class="card">
+                    <div class="card-header">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Cutting options</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="options-grid">
+                            <div class="option-row">
+                                <div class="option-text">
+                                    <span>Kerf / blade thickness</span>
+                                    <small>mm</small>
+                                </div>
+                                <input id="opt-kerf" type="number" class="small-input" value="3"
+                                       min="0" max="10" step="0.1">
+                            </div>
+                            <div class="option-row">
+                                <div class="option-text">
+                                    <span>Labels on panels</span>
+                                </div>
+                                <label class="switch">
+                                    <input id="opt-labels" type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="option-row">
+                                <div class="option-text">
+                                    <span>Use only one stock sheet</span>
+                                </div>
+                                <label class="switch">
+                                    <input id="opt-single-sheet" type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="option-row">
+                                <div class="option-text">
+                                    <span>Consider material / company</span>
+                                </div>
+                                <label class="switch">
+                                    <input id="opt-material" type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="option-row">
+                                <div class="option-text">
+                                    <span>Edge banding</span>
+                                </div>
+                                <label class="switch">
+                                    <input id="opt-edgebanding" type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="option-row">
+                                <div class="option-text">
+                                    <span>Consider grain direction</span>
+                                </div>
+                                <label class="switch">
+                                    <input id="opt-grain" type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Supply + customer -->
+            <div class="two-cols" style="margin-top: 12px;">
+                <!-- Supply -->
+                <section>
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-box-open"></i>
+                            <span>Board supply</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="supply-grid">
+                                <button class="supply-card selected" data-supply="factory" type="button">
+                                    <span class="supply-title">Factory supply</span>
+                                    <span class="supply-note">We supply boards, cost included.</span>
+                                </button>
+                                <button class="supply-card" data-supply="client" type="button">
+                                    <span class="supply-title">Client supply</span>
+                                    <span class="supply-note">Client brings boards, we charge cutting &amp; edging.</span>
+                                </button>
+                            </div>
+
+                            <div id="client-qty-container" class="client-qty" style="display:none;">
+                                <label>
+                                    Boards supplied by client
+                                    <input id="client-board-qty" type="number" value="1" min="1" max="100">
+                                </label>
+                                <label>
+     
+                                    Edging meters supplied by client
+                                    <input id="client-edging-meters" type="number" value="0" min="0" step="0.1">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Customer / project -->
+                <section class="card">
+                    <div class="card-header">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Customer & project</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-grid">
+                            <label>
+                                Project name
+                                <input id="project-name" type="text" placeholder="e.g. Kitchen renovation">
+                            </label>
+                            <label>
+                                Customer name
+                                <input id="customer-name" type="text" placeholder="Full name">
+                            </label>
+                            <label>
+                                Customer email
+                                <input id="customer-email" type="email" placeholder="client@example.com">
+                            </label>
+                            <label>
+                                Phone
+                                <input id="customer-phone" type="text" placeholder="+2547XXXXXXX">
+                            </label>
+                            <label class="form-full">
+                                Notes
+                                <textarea id="project-notes" rows="2" placeholder="Any design notes, edge colour, etc."></textarea>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <!-- STEP 2: RESULTS & PAYMENT -->
+        <section class="step-section" id="step-2">
+            <div class="section-header">
+                <h2>Results & payment</h2>
+                <p>Review the bill of quantities and complete Mpesa payment. Layout appears after payment.</p>
+            </div>
+
+            <div id="loading-state" class="loading">
+                <div class="spinner"></div>
+                <p>Running optimization...</p>
+            </div>
+
+            <div id="results-content" style="display:none;">
+
+                <!-- Summary (hidden until payment) -->
+                <div class="summary-row" id="summary-row">
+                    <div class="summary-card">
+                        <div class="summary-label">Boards needed</div>
+                        <div id="total-boards" class="summary-value">0</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Total panels</div>
+                        <div id="total-panels" class="summary-value">0</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Edge banding</div>
+                        <div id="total-edging" class="summary-value">0m</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Waste</div>
+                        <div id="waste-percent" class="summary-value">0%</div>
+                    </div>
+                </div>
+
+                <!-- Layout + stats (hidden until payment) -->
+                <div class="advanced-layout" id="layout-section">
+                    <section class="layout-panel">
+                        <div class="layout-toolbar">
+                            <div class="layout-tools-left">
+                                <button class="viewer-btn" id="zoom-in" type="button" title="Zoom in">
+                                    <i class="fas fa-search-plus"></i>
+                                </button>
+                                <button class="viewer-btn" id="zoom-out" type="button" title="Zoom out">
+                                    <i class="fas fa-search-minus"></i>
+                                </button>
+                                <button class="viewer-btn" id="zoom-reset" type="button" title="Reset">
+                                    <i class="fas fa-compress-arrows-alt"></i>
+                                </button>
+                            </div>
+                            <div class="layout-tools-right">
+                                <span class="sheet-label">
+                                    Sheet <span id="sheet-index">1</span> / <span id="sheet-total">1</span>
+                                </span>
+                                <button class="viewer-btn" id="sheet-prev" type="button" title="Previous sheet">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button class="viewer-btn" id="sheet-next" type="button" title="Next sheet">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="layout-canvas-container">
+                            <canvas id="layout-canvas"></canvas>
+                            <div id="layout-tooltip"></div>
+                        </div>
+                    </section>
+
+                    <aside class="stats-panel">
+                        <div class="stats-card">
+                            <div class="stats-header">Global statistics</div>
+                            <div class="stats-body">
+                                <div class="stats-row"><span>Used stock sheets</span><span id="stat-used-sheets">-</span></div>
+                                <div class="stats-row"><span>Total used area</span><span id="stat-used-area">-</span></div>
+                                <div class="stats-row"><span>Total wasted area</span><span id="stat-waste-area">-</span></div>
+                                <div class="stats-row"><span>Total cuts</span><span id="stat-total-cuts">-</span></div>
+                                <div class="stats-row"><span>Total cut length</span><span id="stat-total-cut-length">-</span></div>
+                                <div class="stats-row"><span>Kerf</span><span id="stat-kerf">-</span></div>
+                            </div>
+                        </div>
+
+                        <div class="stats-card">
+                            <div class="stats-header">Sheet statistics</div>
+                            <div class="stats-body">
+                                <div class="stats-row"><span>Sheet index</span><span><span id="sheet-stat-index">1</span> / <span id="sheet-stat-total">1</span></span></div>
+                                <div class="stats-row"><span>Stock sheet</span><span id="sheet-size">-</span></div>
+                                <div class="stats-row"><span>Used area</span><span id="sheet-used-area">-</span></div>
+                                <div class="stats-row"><span>Wasted area</span><span id="sheet-waste-area">-</span></div>
+                                <div class="stats-row"><span>Panels</span><span id="sheet-panels">-</span></div>
+                                <div class="stats-row"><span>Wasted panels</span><span id="sheet-wasted-panels">0</span></div>
+                            </div>
+                        </div>
+
+                        <div class="stats-card">
+                            <div class="stats-header">Selected panel</div>
+                            <div class="stats-body">
+                                <div class="stats-row"><span>Label</span><span id="panel-label">-</span></div>
+                                <div class="stats-row"><span>Size</span><span id="panel-size">-</span></div>
+                                <div class="stats-row"><span>Position</span><span id="panel-pos">-</span></div>
+                                <div class="stats-row"><span>Board</span><span id="panel-board">-</span></div>
+                            </div>
+                        </div>
+
+                        <div class="stats-card">
+                            <div class="stats-header">Cuts</div>
+                            <div class="stats-body">
+                                <div class="table-wrapper small">
+                                    <table class="stock-table">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Orient.</th>
+                                            <th>Pos</th>
+                                            <th>Length</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="cuts-body"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+
+                <!-- BOQ -->
+                <section class="boq-section">
+                    <h3>Bill of quantities</h3>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-th-list"></i>
+                            <span>Panel items</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-wrapper">
+                                <table class="stock-table">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Description</th>
+                                        <th>Size</th>
+                                        <th>Qty</th>
+                                        <th>Unit</th>
+                                        <th>Edges</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="boq-panels-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-palette"></i>
+                            <span>Materials & services</span>
+                        </div>
+                        <div class="card-body">
+                            <div id="boq-materials" class="boq-block"></div>
+                            <div id="boq-services" class="boq-block"></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                            <span>Pricing summary</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-wrapper">
+                                <table class="stock-table">
+                                    <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Description</th>
+                                        <th>Qty</th>
+                                        <th>Unit price</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="boq-pricing-body"></tbody>
+                                    <tfoot id="boq-pricing-foot"></tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PAYMENT -->
+                <section class="payment-section">
+                    <div class="section-header small">
+                        <h2>Mpesa payment</h2>
+                        <p>Confirm your customer details, then pay via Mpesa STK push.</p>
+                    </div>
+
+                    <div class="two-cols">
+                        <!-- Customer & order -->
+                        <div>
+                            <section class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span>Customer details</span>
+                                </div>
+                                <div class="card-body">
+                                    <label>
+                                        Customer name
+                                        <input id="pay-customer-name" type="text" placeholder="Customer name">
+                                    </label>
+                                    <label>
+                                        WhatsApp / contact phone
+                                        <input id="pay-customer-whatsapp" type="text" placeholder="+2547XXXXXXX">
+                                    </label>
+                                    <label>
+                                        Email
+                                        <input id="pay-customer-email" type="email" placeholder="client@example.com">
+                                    </label>
+                                </div>
+                            </section>
+
+                            <section class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-file-invoice"></i>
+                                    <span>Order summary</span>
+                                </div>
+                                <div class="card-body" id="payment-order-summary">
+                                    <p><strong>Order ID:</strong> <span id="pay-order-id">-</span></p>
+                                    <p><strong>Total amount:</strong> <span id="pay-order-amount">-</span></p>
+                                    <p><strong>Status:</strong> <span id="pay-order-status">Not created</span></p>
+                                    <p id="pay-order-receipt" style="display:none;">
+                                        <strong>M‑Pesa Receipt:</strong> <span id="pay-receipt-value"></span>
+                                    </p>
+                                </div>
+                            </section>
+                        </div>
+
+                        <!-- Mpesa -->
+                        <div>
+                            <section class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <span>M‑Pesa STK push</span>
+                                </div>
+                                <div class="card-body">
+                                    <label>
+                                        M‑Pesa phone number (2547XXXXXXXX)
+                                        <input id="mpesa-phone" type="text" placeholder="2547XXXXXXXX">
+                                    </label>
+
+                                    <button id="mpesa-pay-btn" class="btn-primary" type="button">
+                                        <i class="fas fa-lock"></i>
+                                        <span>Pay via Mpesa</span>
+                                    </button>
+
+                                    <div id="mpesa-status" class="mpesa-status">
+                                        Waiting for payment...
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>How it works</span>
+                                </div>
+                                <div class="card-body">
+                                    <ol class="payment-steps">
+                                        <li>Fill in your customer name, WhatsApp number and email.</li>
+                                        <li>Enter the correct M‑Pesa phone number.</li>
+                                        <li>Click “Pay via Mpesa”.</li>
+                                        <li>Approve the STK push on the phone (enter PIN).</li>
+                                        <li>Wait for confirmation on this screen plus SMS &amp; email.</li>
+                                    </ol>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer nav -->
+    <footer class="footer-nav">
+        <button id="prev-btn" class="btn-secondary" type="button" disabled>
+            <i class="fas fa-arrow-left"></i>
+            <span>Back</span>
+        </button>
+        <button id="next-btn" class="btn-primary" type="button">
+            <span>Optimize &amp; view results</span>
+            <i class="fas fa-arrow-right"></i>
+        </button>
+    </footer>
+
+    <!-- Toasts -->
+    <div id="toast-container" class="toast-container"></div>
+
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
